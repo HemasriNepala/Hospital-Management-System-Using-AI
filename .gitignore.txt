@@ -1,0 +1,19 @@
+# Ignore the Python virtual environment
+venv/
+env/
+ENV/
+
+# Ignore sensitive environment variables (API keys, Database passwords)
+.env
+
+# Ignore temporary Python cache files
+__pycache__/
+*.pyc
+
+# Ignore local IDE settings (VS Code / PyCharm)
+.vscode/
+.idea/
+
+# Ignore large data files or logs
+*.log
+data/
