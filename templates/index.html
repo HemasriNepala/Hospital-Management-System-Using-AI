@@ -1,0 +1,119 @@
+{% extends "base.html" %}
+{% block title %}Smart Hospital - AI Healthcare{% endblock %}
+{% block content %}
+<div class="hero-section text-center py-5 mb-5 rounded-4 shadow-sm"
+  style="background: linear-gradient(135deg, #0d6efd 0%, #0dcaf0 100%); color: white;">
+  <div class="container">
+    <h1 class="display-3 fw-bold mb-3 animate__animated animate__fadeInDown">
+      <i class="bi bi-robot me-3"></i>{{ t('welcome', session.lang) }}
+    </h1>
+    <p class="lead mb-4 opacity-75 animate__animated animate__fadeInUp animate__delay-1s">
+      {{ t('tagline', session.lang) }}
+    </p>
+    <div class="d-flex justify-content-center gap-3 animate__animated animate__zoomIn animate__delay-2s">
+      <a href="{{ url_for('auth.register') }}" class="btn btn-light btn-lg px-5 py-3 rounded-pill fw-bold shadow">
+        <i class="bi bi-stars me-2 text-primary"></i>Get Started Free
+      </a>
+      <button class="btn btn-outline-light btn-lg px-5 py-3 rounded-pill fw-bold"
+        onclick="document.getElementById('ai-features').scrollIntoView({behavior: 'smooth'})">
+        Explore AI Features
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4 mb-5" id="portals">
+  <div class="col-md-4">
+    <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift">
+      <div class="card-body p-4 text-center">
+        <div class="icon-circle bg-primary-subtle text-primary mb-4 mx-auto">
+          <i class="bi bi-person-heart display-5"></i>
+        </div>
+        <h3 class="fw-bold">{{ t('patient', session.lang) }}</h3>
+        <p class="text-muted">{{ t('patient_desc', session.lang) }}</p>
+        <a href="{{ url_for('auth.login') }}?role=patient" class="btn btn-primary w-100 rounded-pill py-2">{{ t('login',
+          session.lang) }}</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift">
+      <div class="card-body p-4 text-center">
+        <div class="icon-circle bg-success-subtle text-success mb-4 mx-auto">
+          <i class="bi bi-person-badge display-5"></i>
+        </div>
+        <h3 class="fw-bold">{{ t('doctor', session.lang) }}</h3>
+        <p class="text-muted">{{ t('doctor_desc', session.lang) }}</p>
+        <a href="{{ url_for('auth.login') }}?role=doctor" class="btn btn-success w-100 rounded-pill py-2">{{ t('login',
+          session.lang) }}</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card h-100 border-0 shadow-sm rounded-4 hover-lift">
+      <div class="card-body p-4 text-center">
+        <div class="icon-circle bg-secondary-subtle text-secondary mb-4 mx-auto">
+          <i class="bi bi-gear-fill display-5"></i>
+        </div>
+        <h3 class="fw-bold">{{ t('admin', session.lang) }}</h3>
+        <p class="text-muted">{{ t('admin_desc', session.lang) }}</p>
+        <a href="{{ url_for('auth.login') }}?role=admin" class="btn btn-secondary w-100 rounded-pill py-2">{{ t('login',
+          session.lang) }}</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="ai-features" class="py-5 bg-light rounded-5 p-5 mb-5 shadow-inner">
+  <div class="text-center mb-5">
+    <h2 class="fw-bold">Powered by Advanced AI</h2>
+    <p class="text-muted">Discover features that make our hospital management unique.</p>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-3 text-center">
+      <i class="bi bi-clock-history text-warning fs-1"></i>
+      <h5 class="mt-2">Wait Time Prediction</h5>
+      <p class="small text-muted">AI predicts queues based on real-time data.</p>
+    </div>
+    <div class="col-md-3 text-center">
+      <i class="bi bi-file-earmark-medical text-primary fs-1"></i>
+      <h5 class="mt-2">Health Summarizer</h5>
+      <p class="small text-muted">Gemini AI generates summary of patient history.</p>
+    </div>
+    <div class="col-md-3 text-center">
+      <i class="bi bi-shield-check text-success fs-1"></i>
+      <h5 class="mt-2">Blockchain Records</h5>
+      <p class="small text-muted">Tamper-proof hashes for every medical record.</p>
+    </div>
+    <div class="col-md-3 text-center">
+      <i class="bi bi-mic text-danger fs-1"></i>
+      <h5 class="mt-2">Voice Assistant</h5>
+      <p class="small text-muted">Speech-to-text for prescriptions & navigation.</p>
+    </div>
+  </div>
+</div>
+
+<style>
+  .hover-lift {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 1rem 3rem rgba(0, 0, 0, .175) !important;
+  }
+
+  .icon-circle {
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+  }
+
+  .shadow-inner {
+    box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+</style>
+{% endblock %}

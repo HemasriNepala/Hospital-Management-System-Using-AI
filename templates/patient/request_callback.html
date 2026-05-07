@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Request a Phone Call - Patient{% endblock %}
+{% block content %}
+<h1 class="page-title"><i class="bi bi-telephone text-warning me-2"></i>Request a Phone Call</h1>
+<p class="text-muted simple-text mb-4">
+  If you are not comfortable typing, just enter your phone number. Our staff will call you and help you book an appointment.
+</p>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form method="post" action="{{ url_for('patient_routes.request_callback') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <label class="form-label">Your Name (optional)</label>
+        <input type="text" name="name" class="form-control" placeholder="Your name">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Phone Number</label>
+        <input type="tel" name="phone" class="form-control" placeholder="10-digit mobile number" required>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Preferred Language</label>
+          <select name="preferred_language" class="form-select">
+            <option value="">Any</option>
+            <option value="en">English</option>
+            <option value="te">తెలుగు (Telugu)</option>
+            <option value="hi">हिंदी (Hindi)</option>
+          </select>
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Best time to call (optional)</label>
+          <input type="text" name="preferred_time" class="form-control" placeholder="e.g. Today 5 PM, Tomorrow morning">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Reason (optional)</label>
+        <input type="text" name="reason" class="form-control" placeholder="e.g. Fever, Follow-up, Report review">
+      </div>
+      <button type="submit" class="btn btn-warning"><i class="bi bi-check-lg me-1"></i>Submit Request</button>
+      <a href="{{ url_for('patient_routes.dashboard') }}" class="btn btn-outline-secondary ms-2">Back</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
+

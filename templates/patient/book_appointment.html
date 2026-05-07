@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Book Appointment - Patient{% endblock %}
+{% block content %}
+<h1 class="page-title"><i class="bi bi-calendar-plus text-primary me-2"></i>Book Appointment</h1>
+<p class="text-muted simple-text mb-4">Select doctor, date and time. We will confirm your visit.</p>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <div class="alert alert-info d-flex flex-wrap gap-2 align-items-center" role="alert">
+      <div><i class="bi bi-lightbulb me-1"></i><strong>Smart help:</strong> get best doctor & shortest waiting time.
+      </div>
+      <button type="button" class="btn btn-sm btn-outline-primary ms-auto" id="btnSuggestSlot">
+        <i class="bi bi-magic me-1"></i>Suggest Best Slot
+      </button>
+    </div>
+    <div class="mb-3" id="waitTimeBox" style="display:none;">
+      <div class="alert alert-success mb-0">
+        <div class="d-flex align-items-center mb-1">
+          <i class="bi bi-hourglass-split me-2"></i>
+          Estimated waiting time: <strong><span id="waitTimeMinutes">--</span> minutes</strong>
+        </div>
+        <div id="aiPredictionText" class="small mt-1 border-top pt-1 text-dark" style="font-style: italic;"></div>
+      </div>
+    </div>
+    <form method="post" action="{{ url_for('patient_routes.book_appointment') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <label class="form-label">Select Doctor</label>
+        <select name="doctor_id" class="form-select" id="doctorSelect" required>
+          <option value="">— Choose Doctor —</option>
+          {% for d in doctors %}
+          <option value="{{ d.user_id }}" {{ 'selected' if request.args.get('doctor_id')==(d.user_id)|string }}>{{
+            d.full_name }} ({{ d.specialization }})</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Date of Visit</label>
+          <input type="date" name="appointment_date" id="dateInput" class="form-control" required min="{{ today }}">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Time</label>
+          <input type="time" name="appointment_time" id="timeInput" class="form-control" required>
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Any note for doctor (optional)</label>
+        <textarea name="notes" class="form-control" rows="2" placeholder="e.g. Follow-up for fever"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i>Book Appointment</button>
+      <a href="{{ url_for('patient_routes.dashboard') }}" class="btn btn-outline-secondary ms-2">Cancel</a>
+    </form>
+  </div>
+</div>
+{% block scripts %}
+<script>
+  function updateWaitTime() {
+    const doctorId = document.getElementById('doctorSelect').value;
+    const date = document.getElementById('dateInput').value;
+    const time = document.getElementById('timeInput').value;
+    if (!doctorId || !date) return;
+    fetch(`{{ url_for('patient_routes.ai_wait_time') }}?doctor_id=${encodeURIComponent(doctorId)}&date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (!data.ok) return;
+        document.getElementById('waitTimeMinutes').textContent = data.estimated_wait_minutes;
+        document.getElementById('aiPredictionText').textContent = data.ai_prediction || '';
+        document.getElementById('waitTimeBox').style.display = 'block';
+      })
+      .catch(() => { });
+  }
+
+  document.getElementById('doctorSelect').addEventListener('change', updateWaitTime);
+  document.getElementById('dateInput').addEventListener('change', updateWaitTime);
+  document.getElementById('timeInput').addEventListener('change', updateWaitTime);
+
+  document.getElementById('btnSuggestSlot').addEventListener('click', function () {
+    const date = document.getElementById('dateInput').value || "{{ today }}";
+    fetch(`{{ url_for('patient_routes.ai_suggest_slot') }}?date=${encodeURIComponent(date)}`)
+      .then(r => r.json())
+      .then(data => {
+        if (!data.ok) return;
+        const s = data.suggestion;
+        document.getElementById('doctorSelect').value = String(s.doctor_id);
+        document.getElementById('dateInput').value = s.date;
+        document.getElementById('timeInput').value = s.suggested_time;
+        updateWaitTime();
+      })
+      .catch(() => { });
+  });
+
+  // Run once if values already present
+  updateWaitTime();
+</script>
+{% endblock %}
+{% endblock %}

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% block title %}Sign Up - Hospital{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-6 col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h2 class="page-title text-center"><i class="bi bi-person-plus text-primary me-2"></i>Create Account</h2>
+        <p class="text-center text-muted simple-text mb-4">Fill the form to register as Patient or Doctor.</p>
+
+        <form method="post" action="{{ url_for('auth.register') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="mb-3">
+            <label class="form-label">I am a</label>
+            <select name="role" class="form-select" id="regRole" required>
+              <option value="patient">Patient</option>
+              <option value="doctor">Doctor</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="full_name" class="form-control" placeholder="Your full name" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" placeholder="your@email.com" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Choose a password" required
+              minlength="6">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Phone Number</label>
+            <input type="tel" name="phone" class="form-control" placeholder="10-digit mobile number">
+          </div>
+          <div id="patientFields">
+            <div class="mb-3">
+              <label class="form-label">Gender</label>
+              <select name="gender" class="form-select">
+                <option value="">Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Date of Birth</label>
+              <input type="date" name="date_of_birth" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Address</label>
+              <input type="text" name="address" class="form-control" placeholder="Your address">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Blood Group</label>
+              <select name="blood_group" class="form-select">
+                <option value="">Select</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+              </select>
+            </div>
+          </div>
+          <div id="doctorFields" class="d-none">
+            <div class="mb-3">
+              <label class="form-label">Specialization</label>
+              <input type="text" name="specialization" class="form-control" placeholder="e.g. General Physician">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Qualification</label>
+              <input type="text" name="qualification" class="form-control" placeholder="e.g. MBBS, MD">
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 py-2">Sign Up</button>
+        </form>
+
+        <p class="text-center mt-4 mb-0 simple-text">
+          Already have an account? <a href="{{ url_for('auth.login') }}">Log In</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% block scripts %}
+<script>
+  document.getElementById('regRole').addEventListener('change', function () {
+    var isPatient = this.value === 'patient';
+    document.getElementById('patientFields').classList.toggle('d-none', !isPatient);
+    document.getElementById('doctorFields').classList.toggle('d-none', isPatient);
+  });
+  document.getElementById('regRole').dispatchEvent(new Event('change'));
+</script>
+{% endblock %}
+{% endblock %}

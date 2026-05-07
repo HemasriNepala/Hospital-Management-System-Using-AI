@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Verify - Hospital{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-4 col-md-5">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h2 class="page-title text-center"><i class="bi bi-shield-check text-success me-2"></i>Enter Code</h2>
+        <p class="text-center text-muted simple-text mb-3">We sent a 6-digit code to <strong>{{ email }}</strong>. Type it below.</p>
+
+        <form method="post" action="{{ url_for('auth.verify_otp') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="mb-3 text-center">
+            <input type="text" name="otp" class="form-control form-control-lg otp-input mx-auto" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required autofocus>
+          </div>
+          <button type="submit" class="btn btn-success w-100 py-2">Verify & Continue</button>
+        </form>
+
+        <p class="text-center mt-3 mb-0 small text-muted">Didn't get the code? Check your email or try logging in again.</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

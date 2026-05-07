@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}My Dashboard - Patient{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-4">
+  <h1 class="page-title mb-0"><i class="bi bi-house-heart text-primary me-2"></i>My Dashboard</h1>
+  <div class="d-flex gap-2 flex-wrap">
+    <a href="{{ url_for('patient_routes.book_appointment') }}" class="btn btn-primary"><i class="bi bi-plus-lg me-1"></i>Book Appointment</a>
+    <a href="{{ url_for('patient_routes.request_callback') }}" class="btn btn-warning"><i class="bi bi-telephone me-1"></i>Request a Phone Call</a>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-4">
+    <a href="{{ url_for('patient_routes.doctors') }}" class="portal-card card text-center bg-white border-0">
+      <div class="card-body">
+        <i class="bi bi-person-badge text-primary"></i>
+        <h5 class="card-title mt-2">Find Doctors</h5>
+        <p class="card-text text-muted simple-text">See doctors and their timings</p>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="{{ url_for('patient_routes.appointments') }}" class="portal-card card text-center bg-white border-0">
+      <div class="card-body">
+        <i class="bi bi-calendar-check text-success"></i>
+        <h5 class="card-title mt-2">My Appointments</h5>
+        <p class="card-text text-muted simple-text">View and manage your visits</p>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="{{ url_for('patient_routes.prescriptions') }}" class="portal-card card text-center bg-white border-0">
+      <div class="card-body">
+        <i class="bi bi-prescription2 text-info"></i>
+        <h5 class="card-title mt-2">My Prescriptions</h5>
+        <p class="card-text text-muted simple-text">Medicines and instructions</p>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="{{ url_for('patient_routes.reports') }}" class="portal-card card text-center bg-white border-0">
+      <div class="card-body">
+        <i class="bi bi-file-earmark-medical text-warning"></i>
+        <h5 class="card-title mt-2">My Reports</h5>
+        <p class="card-text text-muted simple-text">Download your medical reports</p>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-header bg-light">
+    <h5 class="mb-0"><i class="bi bi-calendar3 me-2"></i>Recent Appointments</h5>
+  </div>
+  <div class="card-body">
+    {% if appointments %}
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead>
+          <tr><th>Date</th><th>Time</th><th>Doctor</th><th>Status</th></tr>
+        </thead>
+        <tbody>
+          {% for a in appointments %}
+          <tr>
+            <td>{{ a.appointment_date.strftime('%d-%b-%Y') }}</td>
+            <td>{{ a.appointment_time.strftime('%I:%M %p') }}</td>
+            <td>{% if a.doctor and a.doctor.doctor_profile %}{{ a.doctor.doctor_profile.full_name }}{% else %}—{% endif %}</td>
+            <td><span class="badge bg-{{ 'success' if a.status == 'completed' else 'warning' if a.status == 'scheduled' else 'secondary' }}">{{ a.status }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p class="text-muted simple-text mb-0">No appointments yet. <a href="{{ url_for('patient_routes.book_appointment') }}">Book one now</a>.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

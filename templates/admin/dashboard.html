@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<h1 class="page-title"><i class="bi bi-speedometer2 text-secondary me-2"></i>Admin Dashboard</h1>
+<p class="text-muted simple-text mb-4">Overview of hospital. Manage doctors, patients and appointments.</p>
+
+<div class="row g-4 mb-4">
+  <div class="col-md-4">
+    <a href="{{ url_for('admin_routes.doctors') }}" class="portal-card card text-center border-0 bg-white shadow-sm">
+      <div class="card-body">
+        <i class="bi bi-person-badge text-primary display-6"></i>
+        <h4 class="mt-2">{{ doctors_count }}</h4>
+        <p class="text-muted mb-0">Doctors</p>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="{{ url_for('admin_routes.patients') }}" class="portal-card card text-center border-0 bg-white shadow-sm">
+      <div class="card-body">
+        <i class="bi bi-people text-success display-6"></i>
+        <h4 class="mt-2">{{ patients_count }}</h4>
+        <p class="text-muted mb-0">Patients</p>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="{{ url_for('admin_routes.appointments') }}" class="portal-card card text-center border-0 bg-white shadow-sm">
+      <div class="card-body">
+        <i class="bi bi-calendar-check text-info display-6"></i>
+        <h4 class="mt-2">{{ appointments_today }}</h4>
+        <p class="text-muted mb-0">Appointments Today</p>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="{{ url_for('admin_routes.beds') }}" class="portal-card card text-center border-0 bg-white shadow-sm">
+      <div class="card-body">
+        <i class="bi bi-hospital text-warning display-6"></i>
+        <h4 class="mt-2">{{ beds_available }} / {{ beds_total }}</h4>
+        <p class="text-muted mb-0">Beds Available</p>
+      </div>
+    </a>
+  </div>
+  <div class="col-md-4">
+    <a href="{{ url_for('admin_routes.callbacks') }}" class="portal-card card text-center border-0 bg-white shadow-sm">
+      <div class="card-body">
+        <i class="bi bi-telephone-inbound text-success display-6"></i>
+        <h4 class="mt-2">{{ callback_new }}</h4>
+        <p class="text-muted mb-0">New Call Requests</p>
+      </div>
+    </a>
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-header bg-light">
+        <h5 class="mb-0"><i class="bi bi-link-45deg me-2"></i>Quick Links</h5>
+      </div>
+      <div class="card-body">
+        <a href="{{ url_for('admin_routes.doctors') }}" class="btn btn-outline-primary d-block mb-2 text-start"><i class="bi bi-person-badge me-2"></i>Manage Doctors</a>
+        <a href="{{ url_for('admin_routes.add_doctor') }}" class="btn btn-outline-success d-block mb-2 text-start"><i class="bi bi-person-plus me-2"></i>Add New Doctor</a>
+        <a href="{{ url_for('admin_routes.patients') }}" class="btn btn-outline-primary d-block mb-2 text-start"><i class="bi bi-people me-2"></i>Manage Patients</a>
+        <a href="{{ url_for('admin_routes.appointments') }}" class="btn btn-outline-info d-block text-start"><i class="bi bi-calendar3 me-2"></i>View All Appointments</a>
+        <a href="{{ url_for('admin_routes.beds') }}" class="btn btn-outline-warning d-block mt-2 text-start"><i class="bi bi-hospital me-2"></i>Emergency Beds</a>
+        <a href="{{ url_for('admin_routes.callbacks') }}" class="btn btn-outline-success d-block mt-2 text-start"><i class="bi bi-telephone me-2"></i>Call Requests</a>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-header bg-light">
+        <h5 class="mb-0"><i class="bi bi-graph-up me-2"></i>Reports</h5>
+      </div>
+      <div class="card-body">
+        <a href="{{ url_for('admin_routes.reports') }}" class="btn btn-outline-secondary d-block text-start"><i class="bi bi-file-earmark-bar-graph me-2"></i>Basic Reports</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

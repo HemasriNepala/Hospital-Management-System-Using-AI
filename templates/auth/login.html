@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Log In - Hospital{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-5 col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h2 class="page-title text-center"><i class="bi bi-box-arrow-in-right text-primary me-2"></i>Log In</h2>
+        <p class="text-center text-muted simple-text mb-4">Enter your email and password to open your account.</p>
+
+        <form method="post" action="{{ url_for('auth.login') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <div class="mb-3">
+            <label class="form-label">Who are you?</label>
+            <select name="role" class="form-select" required>
+              <option value="patient" {{ 'selected' if (request.args.get('role') or 'patient') == 'patient' }}>Patient</option>
+              <option value="doctor" {{ 'selected' if request.args.get('role') == 'doctor' }}>Doctor</option>
+              <option value="admin" {{ 'selected' if request.args.get('role') == 'admin' }}>Admin</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" name="email" class="form-control" placeholder="your@email.com" required autofocus>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Your password" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-100 py-2">Log In</button>
+        </form>
+
+        <p class="text-center mt-4 mb-0 simple-text">
+          Don't have an account? <a href="{{ url_for('auth.register') }}">Sign Up</a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

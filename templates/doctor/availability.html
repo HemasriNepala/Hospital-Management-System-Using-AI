@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Set Timings - Doctor{% endblock %}
+{% block content %}
+<h1 class="page-title"><i class="bi bi-clock text-primary me-2"></i>Set My Timings</h1>
+<p class="text-muted simple-text mb-4">When are you available for patients? Update below.</p>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form method="post" action="{{ url_for('doctor_routes.availability') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <label class="form-label">I am available for appointments</label>
+        <select name="is_available" class="form-select">
+          <option value="yes" {{ 'selected' if profile.is_available }}>Yes</option>
+          <option value="no" {{ 'selected' if not profile.is_available }}>No</option>
+        </select>
+      </div>
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Available from (time)</label>
+          <input type="time" name="available_from" class="form-control" value="{{ profile.available_from.strftime('%H:%M') if profile.available_from else '09:00' }}">
+        </div>
+        <div class="col-md-6 mb-3">
+          <label class="form-label">Available until (time)</label>
+          <input type="time" name="available_to" class="form-control" value="{{ profile.available_to.strftime('%H:%M') if profile.available_to else '17:00' }}">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">Save Timings</button>
+      <a href="{{ url_for('doctor_routes.dashboard') }}" class="btn btn-outline-secondary ms-2">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

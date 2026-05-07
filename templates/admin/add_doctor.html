@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Add Doctor - Admin{% endblock %}
+{% block content %}
+<h1 class="page-title"><i class="bi bi-person-plus text-success me-2"></i>Add Doctor</h1>
+<p class="text-muted simple-text mb-4">Create a new doctor account. They will use email and password to log in.</p>
+
+<div class="card shadow-sm">
+  <div class="card-body">
+    <form method="post" action="{{ url_for('admin_routes.add_doctor') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <label class="form-label">Full Name</label>
+        <input type="text" name="full_name" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" class="form-control" required minlength="6">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Phone</label>
+        <input type="tel" name="phone" class="form-control">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Specialization</label>
+        <input type="text" name="specialization" class="form-control" placeholder="e.g. General Physician" value="General">
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Qualification</label>
+        <input type="text" name="qualification" class="form-control" placeholder="e.g. MBBS, MD">
+      </div>
+      <button type="submit" class="btn btn-success">Add Doctor</button>
+      <a href="{{ url_for('admin_routes.doctors') }}" class="btn btn-outline-secondary ms-2">Cancel</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

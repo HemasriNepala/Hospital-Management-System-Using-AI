@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Find Doctors - Patient{% endblock %}
+{% block content %}
+<h1 class="page-title"><i class="bi bi-person-badge text-primary me-2"></i>Find Doctors</h1>
+<p class="text-muted simple-text mb-4">Choose a doctor and book an appointment. You can see their timings below.</p>
+
+<div class="row g-4">
+  {% for d in doctors %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body">
+        <div class="d-flex align-items-center mb-3">
+          <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+            <i class="bi bi-person-badge text-primary fs-4"></i>
+          </div>
+          <div>
+            <h5 class="card-title mb-0">{{ d.full_name }}</h5>
+            <span class="badge bg-success">{{ d.specialization }}</span>
+          </div>
+        </div>
+        <p class="card-text text-muted small mb-2">{{ d.qualification or '—' }}</p>
+        <p class="card-text small mb-2">
+          <i class="bi bi-clock me-1"></i>
+          {% if d.is_available and d.available_from and d.available_to %}
+            {{ d.available_from.strftime('%I:%M %p') }} – {{ d.available_to.strftime('%I:%M %p') }}
+          {% else %}
+            Check with hospital
+          {% endif %}
+        </p>
+        <a href="{{ url_for('patient_routes.book_appointment') }}?doctor_id={{ d.user_id }}" class="btn btn-primary btn-sm w-100">Book Appointment</a>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="col-12">
+    <div class="alert alert-info">No doctors listed yet. Please check back later.</div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

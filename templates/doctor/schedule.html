@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+{% block title %}My Schedule - Doctor{% endblock %}
+{% block content %}
+<h1 class="page-title"><i class="bi bi-calendar-week text-success me-2"></i>My Schedule</h1>
+<p class="text-muted simple-text mb-4">All your appointments. Add prescription or upload report for scheduled visits.
+</p>
+
+<div class="alert alert-info">
+  <i class="bi bi-robot me-1"></i>
+  Tip: Use <strong>Health Summary</strong> to quickly review patient history.
+</div>
+
+<div class="card shadow-sm">
+  <div class="card-body p-0">
+    {% if appointments %}
+    <div class="table-responsive">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Date</th>
+            <th>Time</th>
+            <th>Patient</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for a in appointments %}
+          <tr>
+            <td>{{ a.appointment_date.strftime('%d-%b-%Y') }}</td>
+            <td>{{ a.appointment_time.strftime('%I:%M %p') }}</td>
+            <td>
+              {% if a.patient and a.patient.patient_profile %}
+              <div class="fw-semibold">{{ a.patient.patient_profile.full_name }}</div>
+              <button type="button" class="btn btn-sm btn-outline-info mt-1 btnSummary"
+                data-patient-id="{{ a.patient_id }}">
+                <i class="bi bi-file-text me-1"></i>Health Summary
+              </button>
+              {% else %}
+              —
+              {% endif %}
+            </td>
+            <td><span
+                class="badge bg-{{ 'success' if a.status == 'completed' else 'warning' if a.status == 'scheduled' else 'secondary' }}">{{
+                a.status }}</span></td>
+            <td>
+              {% if a.status == 'scheduled' %}
+              <a href="{{ url_for('doctor_routes.add_prescription', apt_id=a.id) }}"
+                class="btn btn-sm btn-success me-1">Add Prescription</a>
+              <a href="{{ url_for('doctor_routes.upload_report', apt_id=a.id) }}" class="btn btn-sm btn-primary">Upload
+                Report</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="p-4 text-center text-muted">No appointments in your schedule.</div>
+    {% endif %}
+  </div>
+</div>
+<div class="mt-3">
+  <a href="{{ url_for('doctor_routes.dashboard') }}" class="btn btn-outline-secondary"><i
+      class="bi bi-arrow-left me-1"></i>Back to Dashboard</a>
+</div>
+{% block scripts %}
+<script>
+  function showSummaryModal(text) {
+    const modalHtml = `
+      <div class="modal fade" id="summaryModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title"><i class="bi bi-file-text me-2"></i>Patient Health Summary</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <pre class="mb-0" style="white-space:pre-wrap;font-family:inherit;">${text}</pre>
+            </div>
+          </div>
+        </div>
+      </div>`;
+    const temp = document.createElement('div');
+    temp.innerHTML = modalHtml;
+    document.body.appendChild(temp.firstElementChild);
+    const m = new bootstrap.Modal(document.getElementById('summaryModal'));
+    document.getElementById('summaryModal').addEventListener('hidden.bs.modal', function () {
+      this.remove();
+    });
+    m.show();
+  }
+
+  document.querySelectorAll('.btnSummary').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-patient-id');
+      fetch(`/doctor/ai/patient-summary/${encodeURIComponent(id)}`)
+        .then(r => r.json())
+        .then(data => {
+          if (!data.ok) return;
+          showSummaryModal(data.summary || 'No data.');
+        })
+        .catch(() => { });
+    });
+  });
+</script>
+{% endblock %}
+{% endblock %}
